@@ -2,49 +2,32 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
     <!-- SEO Básico -->
     <title>Neon Pong Ultimate - Juego Arcade Cyberpunk Gratis Online</title>
-    <meta name="description" content="Juega Neon Pong Ultimate gratis online. Una versión moderna y responsive del clásico ping pong con gráficos de neón, física realista y modo para un jugador.">
-    <meta name="keywords" content="pong, neon pong, juego arcade, html5, juego gratis, ping pong online, cyberpunk game, juego retro">
+    <meta name="description" content="Juega Neon Pong Ultimate gratis online. Versión optimizada para móviles con controles táctiles precisos y modo horizontal.">
+    <meta name="keywords" content="pong, neon pong, juego arcade, html5, juego gratis, ping pong online, cyberpunk game, juego movil">
     <meta name="author" content="Neon Dev">
-    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#050505">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://tudominio.com/">
-    <meta property="og:title" content="Neon Pong Ultimate - Juego Arcade Cyberpunk">
-    <meta property="og:description" content="Desafía a la IA en esta versión futurista del clásico Pong. Gráficos de neón, partículas y adrenalina pura.">
-    <meta property="og:image" content="https://tudominio.com/thumbnail.jpg">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="Neon Pong Ultimate">
-    <meta property="twitter:description" content="Juega al Pong más moderno de la web. Estilo Neón y jugabilidad fluida.">
-
-    <!-- JSON-LD para AEO (Answer Engine Optimization) -->
+    <meta property="og:title" content="Neon Pong Ultimate - Mobile Edition">
+    <meta property="og:description" content="La mejor experiencia de Pong en tu móvil. Pantalla completa y controles optimizados.">
+    
+    <!-- JSON-LD para AEO -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "VideoGame",
       "name": "Neon Pong Ultimate",
-      "description": "Una reimaginación cyberpunk del clásico juego de arcade Pong, con efectos de partículas y diseño responsivo.",
-      "genre": ["Arcade", "Casual", "Retro"],
+      "description": "Juego de Pong estilo cyberpunk optimizado para controles táctiles en dispositivos móviles.",
+      "genre": ["Arcade", "Action"],
       "gamePlatform": "Web Browser",
-      "applicationCategory": "Game",
-      "operatingSystem": "Any",
-      "inLanguage": "es",
-      "author": {
-        "@type": "Person",
-        "name": "Neon Dev"
-      },
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD",
-        "category": "free"
-      }
+      "operatingSystem": "Any"
     }
     </script>
 
@@ -64,7 +47,7 @@
             background-color: var(--color-bg);
             color: #fff;
             font-family: var(--font-main);
-            overflow: hidden; /* Evita scroll en móviles */
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -73,9 +56,9 @@
             width: 100vw;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
+            touch-action: none; /* Deshabilita gestos del navegador completamente */
         }
 
-        /* Contenedor principal semántico para SEO */
         main {
             display: flex;
             justify-content: center;
@@ -87,15 +70,16 @@
 
         #game-wrapper {
             position: relative;
-            transition: transform 0.1s;
-            max-width: 100%;
-            max-height: 100%;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         #game-container {
             position: relative;
             box-shadow: 0 0 50px rgba(0, 255, 255, 0.1);
-            border-radius: 4px;
             overflow: hidden;
             border: 1px solid #1a1a2e;
             background: #000;
@@ -104,7 +88,6 @@
         canvas {
             display: block;
             background: radial-gradient(circle at center, #11111f 0%, #000000 100%);
-            touch-action: none; /* Crucial para AEO/UX móvil: evita gestos del navegador */
         }
 
         /* UI Overlay Elements */
@@ -123,11 +106,35 @@
         .score-board {
             display: flex;
             justify-content: center;
-            font-size: clamp(3rem, 10vw, 5rem); /* Responsive typography */
+            font-size: clamp(3rem, 10vw, 5rem);
             font-weight: 700;
             padding-top: 2vh;
             z-index: 10;
             mix-blend-mode: screen;
+            transition: all 0.3s ease;
+        }
+
+        /* Ajustes específicos para LANDSCAPE en móviles (poca altura) */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .score-board {
+                font-size: 3rem; /* Más pequeño para no estorbar */
+                opacity: 0.4; /* Más transparente */
+                padding-top: 10px;
+            }
+            
+            /* Ocultar hint en landscape para limpiar pantalla */
+            .controls-hint {
+                display: none; 
+            }
+
+            .message-container {
+                padding: 20px; /* Menos padding */
+                width: 70%;
+            }
+            
+            h1 { font-size: 2rem; margin-bottom: 5px; }
+            p { margin-bottom: 15px; font-size: 0.9rem; }
+            button { padding: 10px 30px; }
         }
 
         .score {
@@ -158,9 +165,10 @@
             box-shadow: 0 0 50px rgba(0, 243, 255, 0.15);
             backdrop-filter: blur(10px);
             transition: opacity 0.3s, transform 0.3s;
-            width: 80%;
+            width: 85%;
             max-width: 500px;
             box-sizing: border-box;
+            z-index: 50;
         }
 
         h1 {
@@ -204,6 +212,8 @@
             overflow: hidden;
             width: 100%;
             max-width: 300px;
+            /* Mejora para touch */
+            min-height: 44px; 
         }
 
         button:hover {
@@ -223,7 +233,6 @@
             transform: translate(-50%, -60%);
         }
 
-        /* Countdown Overlay */
         #countdown {
             position: absolute;
             top: 50%;
@@ -254,8 +263,24 @@
             text-transform: uppercase;
             letter-spacing: 2px;
         }
+        
+        /* Zona táctil invisible para la izquierda */
+        #touch-zone-hint {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            background: linear-gradient(90deg, rgba(0,243,255,0.05), transparent);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        #touch-zone-hint.visible {
+            opacity: 1;
+        }
 
-        /* Footer oculto visualmente pero accesible para crawlers (SEO Text) */
         .seo-content {
             position: absolute;
             width: 1px;
@@ -277,57 +302,49 @@
                 <canvas id="pongCanvas" aria-label="Tablero de juego Neon Pong"></canvas>
                 
                 <div class="ui-layer">
+                    <div id="touch-zone-hint"></div> <!-- Ayuda visual sutil -->
                     <div class="score-board">
                         <div class="score player-score" id="playerScore" title="Puntuación Jugador">0</div>
                         <div class="score ai-score" id="aiScore" title="Puntuación IA">0</div>
                     </div>
                     <div id="countdown" aria-live="polite">3</div>
-                    <div class="controls-hint">Desliza para mover</div>
+                    <div class="controls-hint">Mueve el dedo en el lado IZQUIERDO</div>
                 </div>
 
-                <!-- Sección semántica para inicio -->
                 <section id="startScreen" class="message-container">
                     <header>
                         <h1>Neon Pong</h1>
                     </header>
-                    <p>Desafía a la IA en este clásico modernizado.<br>El primero en llegar a 5 puntos gana la partida.</p>
-                    <button onclick="startGame()" aria-label="Comenzar juego">Iniciar Sistema</button>
+                    <p>Controles mejorados: Usa tu pulgar izquierdo para mover la paleta.</p>
+                    <button onclick="startGame()" aria-label="Comenzar juego">JUGAR</button>
                 </section>
 
                 <section id="gameOverScreen" class="message-container hidden" aria-hidden="true">
                     <h1 id="winnerText">Ganaste</h1>
                     <p id="finalScore">5 - 3</p>
-                    <button onclick="resetGame()">Reiniciar Partida</button>
+                    <button onclick="resetGame()">Jugar Otra Vez</button>
                 </section>
             </div>
         </div>
     </main>
 
-    <!-- Contenido SEO/AEO (Invisible en UI pero indexable) -->
     <article class="seo-content">
-        <h2>Sobre Neon Pong Ultimate</h2>
-        <p>Neon Pong Ultimate es un juego arcade gratuito basado en el clásico Pong de 1972, reimaginado con una estética cyberpunk moderna, luces de neón y efectos de partículas.</p>
-        
-        <h3>¿Cómo se juega a Neon Pong?</h3>
-        <p>El objetivo es golpear la pelota con tu paleta para que rebote hacia el lado del oponente. Si la pelota pasa la paleta del oponente, ganas un punto. El primer jugador en alcanzar 5 puntos gana.</p>
-        
-        <h3>Controles</h3>
-        <ul>
-            <li><strong>PC:</strong> Usa el mouse para mover la paleta verticalmente.</li>
-            <li><strong>Móvil/Tablet:</strong> Toca y desliza el dedo en la pantalla para controlar la paleta.</li>
-        </ul>
+        <h2>Neon Pong Ultimate Mobile</h2>
+        <p>Disfruta de la mejor experiencia de Pong en tu smartphone. Optimizado para jugar en modo horizontal (landscape) con controles táctiles de precisión.</p>
     </article>
 
     <script>
         // --- CONFIGURACIÓN ---
         const canvas = document.getElementById('pongCanvas');
-        const ctx = canvas.getContext('2d', { alpha: false }); // Optimización de rendimiento
+        const ctx = canvas.getContext('2d', { alpha: false });
         const gameWrapper = document.getElementById('game-wrapper');
         
         let width, height;
         let animationId;
         
-        // --- ESTADO DEL JUEGO ---
+        // ID del toque que controla la paleta (para multitouch)
+        let activeTouchId = null;
+        
         const state = {
             running: false,
             waitingForServe: false,
@@ -336,10 +353,8 @@
             flash: 0
         };
 
-        // --- AUDIO (Sintetizador Simple) ---
-        // Se crea el contexto solo tras interacción del usuario para cumplir políticas de navegadores
+        // --- AUDIO ---
         let audioCtx;
-
         function initAudio() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -351,13 +366,10 @@
         
         function playSound(type) {
             if (!audioCtx) return;
-            
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            
             osc.connect(gain);
             gain.connect(audioCtx.destination);
-            
             const now = audioCtx.currentTime;
 
             if (type === 'hit') {
@@ -387,7 +399,6 @@
         }
 
         // --- OBJETOS ---
-        // Usamos tamaños relativos para responsive
         let paddleWidth = 12;
         let paddleHeight = 90;
         let ballSize = 8;
@@ -399,26 +410,9 @@
             grid: 'rgba(255, 255, 255, 0.03)'
         };
 
-        const player = {
-            x: 0, y: 0, score: 0,
-            color: colors.player,
-            height: paddleHeight
-        };
-
-        const ai = {
-            x: 0, y: 0, score: 0,
-            speed: 5.5,
-            color: colors.ai,
-            height: paddleHeight
-        };
-
-        const ball = {
-            x: 0, y: 0,
-            speedX: 0, speedY: 0,
-            baseSpeed: 9, // Ajustaremos esto en resize para móviles
-            color: colors.ball,
-            trail: [] 
-        };
+        const player = { x: 0, y: 0, score: 0, color: colors.player, height: paddleHeight };
+        const ai = { x: 0, y: 0, score: 0, speed: 5.5, color: colors.ai, height: paddleHeight };
+        const ball = { x: 0, y: 0, speedX: 0, speedY: 0, baseSpeed: 9, color: colors.ball, trail: [] };
 
         // --- SISTEMA DE PARTÍCULAS ---
         let particles = [];
@@ -458,105 +452,140 @@
             }
         }
 
-        // --- CORE & RESPONSIVE ---
+        // --- RESIZE Y FULLSCREEN ---
         function resize() {
-            // Lógica responsive mejorada
-            // En móviles, queremos ocupar casi toda la pantalla
-            const isMobile = window.innerWidth < 768;
+            // En móviles, maximizar el uso de pantalla
+            let margin = 0;
             
-            let margin = isMobile ? 0 : 40;
-            const maxWidth = 1000;
-            const maxHeight = 700;
+            // Si estamos en desktop, dejar margen
+            if (window.innerWidth > 1024) margin = 40;
+            
+            const maxWidth = 1200;
+            const maxHeight = 800;
             
             let w = window.innerWidth - margin;
             let h = window.innerHeight - margin;
             
-            if (w > maxWidth) w = maxWidth;
-            if (h > maxHeight) h = maxHeight;
+            if (w > maxWidth && margin > 0) w = maxWidth;
+            if (h > maxHeight && margin > 0) h = maxHeight;
             
             canvas.width = w;
             canvas.height = h;
             width = w;
             height = h;
 
-            // Ajustar elementos según el tamaño
-            paddleHeight = h * 0.15; // 15% de la altura
-            if (paddleHeight > 100) paddleHeight = 100;
-            if (paddleHeight < 60) paddleHeight = 60;
+            // Paleta más grande en landscape móvil para facilitar el juego
+            let heightFactor = 0.15;
+            if (window.innerHeight < 500) heightFactor = 0.22; // 22% de altura en landscape
+
+            paddleHeight = h * heightFactor;
+            // Límites razonables
+            if (paddleHeight > 120) paddleHeight = 120;
+            if (paddleHeight < 50) paddleHeight = 50;
 
             player.height = paddleHeight;
             ai.height = paddleHeight;
             
-            // Ajustar velocidad base según ancho de pantalla para mantener dificultad
-            ball.baseSpeed = width * 0.01; 
-            if (ball.baseSpeed < 6) ball.baseSpeed = 6;
-            if (ball.baseSpeed > 10) ball.baseSpeed = 10;
+            // Velocidad relativa al ancho
+            ball.baseSpeed = width * 0.012; 
+            if (ball.baseSpeed < 5) ball.baseSpeed = 5;
+            if (ball.baseSpeed > 12) ball.baseSpeed = 12;
             
-            // Posiciones iniciales
-            player.x = width * 0.05; // 5% desde la izquierda
-            ai.x = width - (width * 0.05) - paddleWidth;
+            // Posiciones
+            player.x = width * 0.08; // Un poco más adentro para evitar bordes de pantalla curva
+            ai.x = width - (width * 0.08) - paddleWidth;
             
             if (!state.running && !state.waitingForServe) {
                 resetPositions();
             }
         }
         
-        // Debounce resize para rendimiento
-        let resizeTimeout;
         window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(resize, 100);
+            setTimeout(resize, 100);
         });
+
+        // Intentar poner pantalla completa en móviles
+        function requestFullScreen() {
+            const el = document.documentElement;
+            if (el.requestFullscreen) el.requestFullscreen().catch(err => {});
+            else if (el.mozRequestFullScreen) el.mozRequestFullScreen().catch(err => {}); // Firefox
+            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen().catch(err => {}); // Chrome, Safari and Opera
+            else if (el.msRequestFullscreen) el.msRequestFullscreen().catch(err => {}); // IE/Edge
+        }
         
-        // Input
+        // --- INPUT AVANZADO (TOUCH FILTERING) ---
         function movePaddle(clientY) {
             const rect = canvas.getBoundingClientRect();
-            // Ajustar escala si el canvas CSS difiere del canvas real
             const scaleY = canvas.height / rect.height; 
             const relativeY = (clientY - rect.top) * scaleY;
             
             player.y = relativeY - player.height / 2;
             
-            // Clamp
             if (player.y < 0) player.y = 0;
             if (player.y > height - player.height) player.y = height - player.height;
         }
 
-        // Mouse & Touch events
+        // Mouse (PC)
         document.addEventListener('mousemove', (e) => {
              if(state.running || state.waitingForServe) movePaddle(e.clientY);
         });
         
-        // Optimización AEO: Prevenir comportamientos por defecto del navegador en touch
+        // Touch (Móvil) - Lógica Mejorada
         canvas.addEventListener('touchstart', (e) => {
              if(e.cancelable) e.preventDefault();
-             if(state.running) initAudio(); // Init audio on touch
+             if(state.running) initAudio();
+
+             // Buscar un toque nuevo en la mitad IZQUIERDA de la pantalla
+             for (let i = 0; i < e.changedTouches.length; i++) {
+                 const t = e.changedTouches[i];
+                 // Si el toque es en el 50% izquierdo, lo asignamos como controlador
+                 if (t.clientX < window.innerWidth / 2) {
+                     activeTouchId = t.identifier;
+                     movePaddle(t.clientY);
+                     document.getElementById('touch-zone-hint').classList.add('visible');
+                     setTimeout(() => document.getElementById('touch-zone-hint').classList.remove('visible'), 500);
+                     break; // Solo necesitamos un dedo controlador
+                 }
+             }
         }, { passive: false });
 
         canvas.addEventListener('touchmove', (e) => {
             if((state.running || state.waitingForServe)) {
-                if(e.cancelable) e.preventDefault(); // Prevenir scroll
-                movePaddle(e.touches[0].clientY);
+                if(e.cancelable) e.preventDefault(); 
+                
+                // Solo mover si es el dedo activo
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    const t = e.changedTouches[i];
+                    if (t.identifier === activeTouchId) {
+                        movePaddle(t.clientY);
+                        break;
+                    }
+                }
             }
         }, { passive: false });
 
+        canvas.addEventListener('touchend', (e) => {
+            for (let i = 0; i < e.changedTouches.length; i++) {
+                if (e.changedTouches[i].identifier === activeTouchId) {
+                    activeTouchId = null; // Soltó el dedo controlador
+                }
+            }
+        });
 
-        // --- LÓGICA DE JUEGO ---
+
+        // --- LÓGICA DE JUEGO (Igual que antes) ---
         function update() {
-            // Shake decay
             if (state.shake > 0) {
                 state.shake *= 0.9;
                 if (state.shake < 0.5) state.shake = 0;
             }
-            
-            // Flash decay
             if (state.flash > 0) {
                 state.flash -= 0.05;
                 if (state.flash < 0) state.flash = 0;
             }
 
             if (state.waitingForServe) {
-                // IA idle movement (sutil)
+                // IA sutil
                 let targetY = height / 2 - ai.height/2;
                 ai.y += (targetY - ai.y) * 0.05;
                 return; 
@@ -572,21 +601,20 @@
             const aiCenter = ai.y + ai.height / 2;
             let targetY = ball.y;
             
-            // Nivel de dificultad adaptativo
-            let aiReaction = 0.08; 
-            
             if (ball.speedX > 0) {
-                if (aiCenter < targetY - 20) ai.y += ai.speed + (Math.abs(ball.speedX) * 0.1);
-                else if (aiCenter > targetY + 20) ai.y -= ai.speed + (Math.abs(ball.speedX) * 0.1);
+                // La IA falla a veces en nivel difícil si la bola va muy rápido verticalmente
+                let skill = 0.12; 
+                if (aiCenter < targetY - 20) ai.y += ai.speed + (Math.abs(ball.speedX) * skill);
+                else if (aiCenter > targetY + 20) ai.y -= ai.speed + (Math.abs(ball.speedX) * skill);
             } else {
                  let center = height / 2 - ai.height/2;
-                 ai.y += (center - ai.y) * 0.02;
+                 ai.y += (center - ai.y) * 0.03;
             }
             
             if (ai.y < 0) ai.y = 0;
             if (ai.y > height - ai.height) ai.y = height - ai.height;
 
-            // Rebotes Paredes
+            // Paredes
             if (ball.y - ballSize < 0 || ball.y + ballSize > height) {
                 ball.speedY = -ball.speedY;
                 ball.y = (ball.y < height/2) ? ballSize + 1 : height - ballSize - 1;
@@ -594,15 +622,14 @@
                 createExplosion(ball.x, ball.y, '#fff', 5);
             }
 
-            // Colisiones Paletas
+            // Colisiones
             if (checkCollision(player)) handleHit(player, 1);
             else if (checkCollision(ai)) handleHit(ai, -1);
 
-            // Puntuación
+            // Puntos
             if (ball.x < -20) scorePoint('ai');
             else if (ball.x > width + 20) scorePoint('player');
 
-            // Actualizar partículas
             particles.forEach((p, index) => {
                 p.update();
                 if (p.life <= 0) particles.splice(index, 1);
@@ -617,7 +644,6 @@
         }
 
         function handleHit(paddle, dir) {
-            // Asegurar que la bola salga de la zona de colisión para evitar rebotes múltiples
             if (dir === 1) ball.x = paddle.x + paddleWidth + ballSize;
             else ball.x = paddle.x - ballSize;
 
@@ -625,20 +651,15 @@
             ball.speedX *= 1.05;
             ball.speedY *= 1.05;
             
-            const maxSpeed = width * 0.025; // Max speed relativa al ancho
+            const maxSpeed = width * 0.03; 
             if (Math.abs(ball.speedX) > maxSpeed) ball.speedX = maxSpeed * Math.sign(ball.speedX);
 
             let hitPoint = (ball.y - (paddle.y + paddle.height/2)) / (paddle.height/2);
-            ball.speedY = hitPoint * (ball.baseSpeed * 0.8);
+            ball.speedY = hitPoint * (ball.baseSpeed * 1.2); // Más ángulo para más diversión
 
             playSound('hit');
             state.shake = 5;
-            createExplosion(
-                dir === 1 ? paddle.x + paddleWidth : paddle.x, 
-                ball.y, 
-                paddle.color, 
-                20, 1.5
-            );
+            createExplosion(dir === 1 ? paddle.x + paddleWidth : paddle.x, ball.y, paddle.color, 20, 1.5);
         }
 
         function scorePoint(winner) {
@@ -666,17 +687,13 @@
         function updateScoreUI() {
             const pEl = document.getElementById('playerScore');
             const aEl = document.getElementById('aiScore');
-            
             pEl.innerText = player.score;
             aEl.innerText = ai.score;
-            
             pEl.classList.remove('bump');
             aEl.classList.remove('bump');
             void pEl.offsetWidth; 
-            
             if(player.score > parseInt(pEl.getAttribute('data-prev') || 0)) pEl.classList.add('bump');
             if(ai.score > parseInt(aEl.getAttribute('data-prev') || 0)) aEl.classList.add('bump');
-            
             pEl.setAttribute('data-prev', player.score);
             aEl.setAttribute('data-prev', ai.score);
         }
@@ -698,7 +715,6 @@
 
             drawGrid();
 
-            // Red central
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
             ctx.lineWidth = 2;
             ctx.beginPath();
@@ -706,7 +722,6 @@
             ctx.lineTo(width/2, height);
             ctx.stroke();
 
-            // Objetos
             drawGlowRect(player.x, player.y, paddleWidth, player.height, player.color);
             drawGlowRect(ai.x, ai.y, paddleWidth, ai.height, ai.color);
 
@@ -716,7 +731,6 @@
             }
 
             particles.forEach(p => p.draw(ctx));
-
             ctx.restore();
         }
 
@@ -724,8 +738,6 @@
             ctx.strokeStyle = 'rgba(0, 243, 255, 0.03)';
             ctx.lineWidth = 1;
             const gridSize = 40;
-            
-            // Dibujar solo líneas verticales para rendimiento
             for (let x = 0; x <= width; x += gridSize) {
                 ctx.beginPath();
                 ctx.moveTo(x, 0);
@@ -739,7 +751,6 @@
                 const pos = ball.trail[i];
                 const opacity = (i / ball.trail.length) * 0.4;
                 const size = ballSize * (i / ball.trail.length);
-                
                 ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
                 ctx.beginPath();
                 ctx.arc(pos.x, pos.y, size, 0, Math.PI * 2);
@@ -752,7 +763,6 @@
             ctx.shadowColor = color;
             ctx.fillStyle = color;
             ctx.fillRect(x, y, w, h);
-            
             ctx.shadowBlur = 0;
             ctx.fillStyle = "rgba(255,255,255,0.4)";
             ctx.fillRect(x+2, y+2, w-4, h-4);
@@ -767,23 +777,18 @@
             ctx.fill();
         }
 
-
-        // --- CONTROL DE FLUJO ---
+        // --- CONTROL ---
         function startRound() {
             state.waitingForServe = true;
             resetPositions();
-            
             let count = 3;
             const countEl = document.getElementById('countdown');
-            
             function tick() {
                 if (!state.running && count < 3) return;
-                
                 if (count > 0) {
                     countEl.innerText = count;
                     countEl.classList.add('active');
                     playSound('wall'); 
-                    
                     setTimeout(() => {
                         countEl.classList.remove('active');
                         count--;
@@ -819,8 +824,10 @@
         }
 
         function startGame() {
-            initAudio(); // Inicializar audio con interacción usuario
-            
+            initAudio(); 
+            // Intentar Fullscreen
+            if (window.innerWidth < 1024) requestFullScreen();
+
             document.getElementById('startScreen').classList.add('hidden');
             document.getElementById('startScreen').setAttribute('aria-hidden', 'true');
             document.getElementById('gameOverScreen').classList.add('hidden');
@@ -832,19 +839,15 @@
             state.running = true;
             resize(); 
             startRound();
-            
             if (!animationId) loop();
         }
 
         function endGame() {
             state.running = false;
-            
             const winText = document.getElementById('winnerText');
             const scoreText = document.getElementById('finalScore');
             const overlay = document.getElementById('gameOverScreen');
-            
             overlay.setAttribute('aria-hidden', 'false');
-
             if (player.score > ai.score) {
                 winText.innerText = "¡VICTORIA!";
                 winText.style.color = colors.player;
@@ -852,7 +855,6 @@
                 winText.innerText = "DERROTA";
                 winText.style.color = colors.ai;
             }
-
             scoreText.innerText = `${player.score} - ${ai.score}`;
             overlay.classList.remove('hidden');
         }
@@ -871,10 +873,8 @@
             animationId = requestAnimationFrame(loop);
         }
 
-        // Init
         resize();
         draw();
-
     </script>
 </body>
 </html>
