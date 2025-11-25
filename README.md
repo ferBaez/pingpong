@@ -1,2 +1,0 @@
-# pingpong
-pingpong/game
