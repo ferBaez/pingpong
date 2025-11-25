@@ -11,7 +11,7 @@
     <title>Neon Pong Ultimate - Juego Arcade Cyberpunk Gratis Online</title>
     <meta name="description" content="Juega Neon Pong Ultimate gratis online. Versión optimizada para móviles con controles táctiles precisos y modo horizontal.">
     <meta name="keywords" content="pong, neon pong, juego arcade, html5, juego gratis, ping pong online, cyberpunk game, juego movil">
-    <meta name="author" content="Neon Dev">
+    <meta name="author" content="Hitster Ai">
     <meta name="theme-color" content="#050505">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -41,7 +41,12 @@
       "description": "Juego de Pong estilo cyberpunk optimizado para controles táctiles en dispositivos móviles.",
       "genre": ["Arcade", "Action"],
       "gamePlatform": "Web Browser",
-      "operatingSystem": "Any"
+      "operatingSystem": "Any",
+      "author": {
+        "@type": "Organization",
+        "name": "Hitster Ai",
+        "url": "https://studio--hitsterai.us-central1.hosted.app/es"
+      }
     }
     </script>
 
@@ -102,6 +107,7 @@
         canvas {
             display: block;
             background: radial-gradient(circle at center, #11111f 0%, #000000 100%);
+            touch-action: none;
         }
 
         /* UI Overlay Elements */
@@ -136,7 +142,6 @@
                 padding-top: 10px;
             }
             
-            /* Ocultar hint en landscape para limpiar pantalla */
             .controls-hint {
                 display: none; 
             }
@@ -226,7 +231,6 @@
             overflow: hidden;
             width: 100%;
             max-width: 300px;
-            /* Mejora para touch */
             min-height: 44px; 
         }
 
@@ -269,7 +273,7 @@
 
         .controls-hint {
             position: absolute;
-            bottom: 30px;
+            bottom: 60px; /* Subido un poco para dejar espacio al footer */
             width: 100%;
             text-align: center;
             color: #444;
@@ -278,23 +282,6 @@
             letter-spacing: 2px;
         }
         
-        /* Zona táctil invisible para la izquierda */
-        #touch-zone-hint {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 50%;
-            background: linear-gradient(90deg, rgba(0,243,255,0.05), transparent);
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-        
-        #touch-zone-hint.visible {
-            opacity: 1;
-        }
-
         .seo-content {
             position: absolute;
             width: 1px;
@@ -306,6 +293,37 @@
             white-space: nowrap;
             border: 0;
         }
+
+        /* --- FOOTER ESTILIZADO --- */
+        footer {
+            position: fixed;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 100;
+            font-size: 0.75rem;
+            color: #666;
+            pointer-events: none; /* Permite clicks a través del footer si no se toca el enlace */
+        }
+
+        footer a {
+            color: #888;
+            text-decoration: none;
+            transition: color 0.3s, text-shadow 0.3s;
+            pointer-events: auto; /* Reactivar clicks solo en los enlaces */
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            color: var(--color-primary);
+            text-shadow: 0 0 8px var(--color-primary);
+        }
+
+        footer span {
+            margin: 0 5px;
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body>
@@ -316,31 +334,37 @@
                 <canvas id="pongCanvas" aria-label="Tablero de juego Neon Pong"></canvas>
                 
                 <div class="ui-layer">
-                    <div id="touch-zone-hint"></div> <!-- Ayuda visual sutil -->
                     <div class="score-board">
                         <div class="score player-score" id="playerScore" title="Puntuación Jugador">0</div>
                         <div class="score ai-score" id="aiScore" title="Puntuación IA">0</div>
                     </div>
                     <div id="countdown" aria-live="polite">3</div>
-                    <div class="controls-hint">Mueve el dedo en el lado IZQUIERDO</div>
+                    <div class="controls-hint">Toca y arrastra para mover</div>
                 </div>
 
                 <section id="startScreen" class="message-container">
                     <header>
                         <h1>Neon Pong</h1>
                     </header>
-                    <p>Controles mejorados: Usa tu pulgar izquierdo para mover la paleta.</p>
+                    <p>Controles mejorados: Toca en cualquier lugar para moverte.</p>
                     <button onclick="startGame()" aria-label="Comenzar juego">JUGAR</button>
                 </section>
 
                 <section id="gameOverScreen" class="message-container hidden" aria-hidden="true">
-                    <h1 id="winnerText">Ganaste</h1>
+                    <h1 id="winnerText">GANASTE</h1>
                     <p id="finalScore">5 - 3</p>
                     <button onclick="resetGame()">Jugar Otra Vez</button>
                 </section>
             </div>
         </div>
     </main>
+    
+    <!-- Footer Reintegrado -->
+    <footer>
+        Todos los derechos reservados a <a href="https://studio--hitsterai.us-central1.hosted.app/es" target="_blank" rel="noopener">Hitster Ai</a>
+        <span>|</span>
+        <a href="mailto:baez@hitster.page">Contáctanos</a>
+    </footer>
 
     <article class="seo-content">
         <h2>Neon Pong Ultimate Mobile</h2>
@@ -468,10 +492,8 @@
 
         // --- RESIZE Y FULLSCREEN ---
         function resize() {
-            // En móviles, maximizar el uso de pantalla
             let margin = 0;
-            
-            // Si estamos en desktop, dejar margen
+            // Margen solo en escritorio
             if (window.innerWidth > 1024) margin = 40;
             
             const maxWidth = 1200;
@@ -488,25 +510,21 @@
             width = w;
             height = h;
 
-            // Paleta más grande en landscape móvil para facilitar el juego
             let heightFactor = 0.15;
-            if (window.innerHeight < 500) heightFactor = 0.22; // 22% de altura en landscape
+            if (window.innerHeight < 500) heightFactor = 0.22;
 
             paddleHeight = h * heightFactor;
-            // Límites razonables
             if (paddleHeight > 120) paddleHeight = 120;
             if (paddleHeight < 50) paddleHeight = 50;
 
             player.height = paddleHeight;
             ai.height = paddleHeight;
             
-            // Velocidad relativa al ancho
             ball.baseSpeed = width * 0.012; 
             if (ball.baseSpeed < 5) ball.baseSpeed = 5;
             if (ball.baseSpeed > 12) ball.baseSpeed = 12;
             
-            // Posiciones
-            player.x = width * 0.08; // Un poco más adentro para evitar bordes de pantalla curva
+            player.x = width * 0.08; 
             ai.x = width - (width * 0.08) - paddleWidth;
             
             if (!state.running && !state.waitingForServe) {
@@ -518,23 +536,22 @@
             setTimeout(resize, 100);
         });
 
-        // Intentar poner pantalla completa en móviles
         function requestFullScreen() {
             const el = document.documentElement;
             if (el.requestFullscreen) el.requestFullscreen().catch(err => {});
-            else if (el.mozRequestFullScreen) el.mozRequestFullScreen().catch(err => {}); // Firefox
-            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen().catch(err => {}); // Chrome, Safari and Opera
-            else if (el.msRequestFullscreen) el.msRequestFullscreen().catch(err => {}); // IE/Edge
+            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen().catch(err => {});
         }
         
-        // --- INPUT AVANZADO (TOUCH FILTERING) ---
+        // --- INPUT AVANZADO (TOUCH UNIFICADO) ---
         function movePaddle(clientY) {
             const rect = canvas.getBoundingClientRect();
+            // Calcular factor de escala si el tamaño visual difiere del tamaño interno
             const scaleY = canvas.height / rect.height; 
             const relativeY = (clientY - rect.top) * scaleY;
             
             player.y = relativeY - player.height / 2;
             
+            // Mantener dentro del canvas
             if (player.y < 0) player.y = 0;
             if (player.y > height - player.height) player.y = height - player.height;
         }
@@ -544,22 +561,18 @@
              if(state.running || state.waitingForServe) movePaddle(e.clientY);
         });
         
-        // Touch (Móvil) - Lógica Mejorada
+        // Touch (Móvil) - Control Universal
+        // Ahora cualquier toque controla al jugador, no solo la mitad izquierda.
+        // Esto mejora la usabilidad con una mano o para usuarios diestros.
         canvas.addEventListener('touchstart', (e) => {
              if(e.cancelable) e.preventDefault();
              if(state.running) initAudio();
 
-             // Buscar un toque nuevo en la mitad IZQUIERDA de la pantalla
-             for (let i = 0; i < e.changedTouches.length; i++) {
-                 const t = e.changedTouches[i];
-                 // Si el toque es en el 50% izquierdo, lo asignamos como controlador
-                 if (t.clientX < window.innerWidth / 2) {
-                     activeTouchId = t.identifier;
-                     movePaddle(t.clientY);
-                     document.getElementById('touch-zone-hint').classList.add('visible');
-                     setTimeout(() => document.getElementById('touch-zone-hint').classList.remove('visible'), 500);
-                     break; // Solo necesitamos un dedo controlador
-                 }
+             // Tomar el primer toque nuevo como el "controlador" si no hay uno activo
+             if (activeTouchId === null && e.changedTouches.length > 0) {
+                 const t = e.changedTouches[0];
+                 activeTouchId = t.identifier;
+                 movePaddle(t.clientY);
              }
         }, { passive: false });
 
@@ -567,7 +580,7 @@
             if((state.running || state.waitingForServe)) {
                 if(e.cancelable) e.preventDefault(); 
                 
-                // Solo mover si es el dedo activo
+                // Buscar si el dedo que se mueve es el que controla la paleta
                 for (let i = 0; i < e.changedTouches.length; i++) {
                     const t = e.changedTouches[i];
                     if (t.identifier === activeTouchId) {
@@ -581,13 +594,13 @@
         canvas.addEventListener('touchend', (e) => {
             for (let i = 0; i < e.changedTouches.length; i++) {
                 if (e.changedTouches[i].identifier === activeTouchId) {
-                    activeTouchId = null; // Soltó el dedo controlador
+                    activeTouchId = null; // Soltó el control
                 }
             }
         });
 
 
-        // --- LÓGICA DE JUEGO (Igual que antes) ---
+        // --- LÓGICA DE JUEGO ---
         function update() {
             if (state.shake > 0) {
                 state.shake *= 0.9;
@@ -599,7 +612,6 @@
             }
 
             if (state.waitingForServe) {
-                // IA sutil
                 let targetY = height / 2 - ai.height/2;
                 ai.y += (targetY - ai.y) * 0.05;
                 return; 
@@ -616,7 +628,6 @@
             let targetY = ball.y;
             
             if (ball.speedX > 0) {
-                // La IA falla a veces en nivel difícil si la bola va muy rápido verticalmente
                 let skill = 0.12; 
                 if (aiCenter < targetY - 20) ai.y += ai.speed + (Math.abs(ball.speedX) * skill);
                 else if (aiCenter > targetY + 20) ai.y -= ai.speed + (Math.abs(ball.speedX) * skill);
@@ -669,7 +680,7 @@
             if (Math.abs(ball.speedX) > maxSpeed) ball.speedX = maxSpeed * Math.sign(ball.speedX);
 
             let hitPoint = (ball.y - (paddle.y + paddle.height/2)) / (paddle.height/2);
-            ball.speedY = hitPoint * (ball.baseSpeed * 1.2); // Más ángulo para más diversión
+            ball.speedY = hitPoint * (ball.baseSpeed * 1.2); 
 
             playSound('hit');
             state.shake = 5;
@@ -863,7 +874,7 @@
             const overlay = document.getElementById('gameOverScreen');
             overlay.setAttribute('aria-hidden', 'false');
             if (player.score > ai.score) {
-                winText.innerText = "¡VICTORIA!";
+                winText.innerText = "VICTORIA";
                 winText.style.color = colors.player;
             } else {
                 winText.innerText = "DERROTA";
